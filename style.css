@@ -1,0 +1,78 @@
+body{
+    display: flex;
+    flex-direction: column;
+    background-color: #F7F0DF;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+#carreconnexion{
+    margin-top: 10%;
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    width: 500px;
+    background-color: #F0CD8C;
+    border: 3px solid #F4A159;
+    border-radius: 27px;
+    justify-content: center;
+    align-items: center;
+}
+
+h1{
+    font-size: 50px;
+}
+
+form{
+    margin: 20px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form{
+    width: 400px;
+    height: 50px;
+    background-color: #F7DFAE;
+    border: 3px solid #CAB673;
+    border-radius: 19px;
+}
+.checkk{
+    display: flex;
+border: none !important;
+height: 10px !important;
+}
+
+.check{
+    border: none !important;
+}
+
+.btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #E96A25;
+    border-radius: 19px;
+    border: none;
+    color: white;
+    width: 270px;
+    height: 57px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+#carreinscription{
+        margin-top: 10%;
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 500px;
+    background-color: #F0CD8C;
+    border: 3px solid #F4A159;
+    border-radius: 27px;
+    justify-content: center;
+    align-items: center;
+}
