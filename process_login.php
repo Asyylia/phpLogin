@@ -1,6 +1,33 @@
 <?php
 session_start();
+require 'csrf.php';
 require 'db.php';
+
+// Système de protection CSRF
+if (!verifyCsrfToken($_POST['csrf_token'] ?? '')) {
+    die("Tentative CSRF détectée !");
+}
+
+function setRememberMe($user_id, $pdo)
+{
+    $selector = bin2hex(random_bytes(6)); // index de position (prénom)
+    $validator = bin2hex(random_bytes(32)); // contenu du token (nom de famille)
+    $hashed_validator = hash('sha256', $validator); // token crypté (nom de famille crypté)
+    $expires = date('Y-m-d H:i:s', time() + 86400 * 30);
+
+    $stmt = $pdo->prepare("INSERT INTO remember_tokens (user_id, selector, hashed_validator, expires) VALUES ( ?,?,?,?)");
+    $stmt->execute([$user_id, $selector, $hashed_validator, $expires]);
+
+    setCookie(
+        'remember_me',
+        "$selector:$validator",
+        time() + 86400 * 30,
+        "/",
+        '',
+        true,
+        true
+    );
+}
 
 // Vérifie si le formulaire est de type 'POST'
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -20,10 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Si la superglobale n'est pas vide (donc cochée)
         if (!empty($_POST['remember_me'])) {
-            // crée une variable qui stocke un token converti en données binaires avec représentations héxadécimales
-            $token = bin2hex(random_bytes(16));
-            // ajoute dans les cookies le token avec une date d'expiration de 30 jours
-            setcookie("remember_token", $token, time() + 86400 * 30, "/", "", true, true);
+            setRememberMe($user['id'], $pdo);
         }
 
         header("Location: dashboard.php");

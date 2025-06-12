@@ -1,6 +1,11 @@
 <?php
 require 'db.php';
+require 'csrf.php';
 
+
+if (!verifyCsrfToken($_POST['csrf_token'] ?? '')) {
+    die("Tentative CSRF détectée !");
+}
 
 // Si le formulaire est de type "POST"
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -29,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try { // Essaye d'éxecuter la requête
         $stmt->execute([$username, $email, $passwordHash]);
-        echo "Inscription réussie, vous pouvez vous <a href='login.php'>connecter</a>;";
+        echo "Inscription réussie, vous pouvez vous connecter";
 
     } catch (PDOException $e) { // Récupère l'erreur 1049 ( qui corresponds au 23000)
         if ($e->getCode() == 23000) {

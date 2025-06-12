@@ -22,6 +22,7 @@
             <button class="btn" type="submit">Me connecter</button>
         </form>
     </div>
+    <p>Pas encore inscrit ? <a href="register.php">Rejoins-nous</a></p>
 </body>
 
 </html>

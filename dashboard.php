@@ -1,7 +1,31 @@
 <?php
 session_start();
+require 'db.php';
 
-if (!isset($_SESSION['user_id'])) {
+
+// Si il n'y a pas d'utilisateur connecté et qu'il possède un cookie "remember_me"
+if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
+    list($selector, $validator) = explode(':', $_COOKIE['remember_me']);
+
+    $stmt = $pdo->prepare("SELECT * FROM remember_tokens WHERE selector = ? AND expires >= NOW()");
+    $stmt->execute([$selector]);
+    $token = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($token && hash_equals($token["hashed_validator"], hash('sha256', $validator))) {
+        // ok, login
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$token["user_id"]]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            $_SESSION["user_id"] = $user["id"];
+            $_SESSION["username"] = $user["username"];
+        }
+    }
+}
+
+// empêche l'accès au dashboard si l'utilisateur n'est pas connecté
+if (!isset($_SESSION["user_id"])) {
     header("Location: login.php");
     exit;
 }
